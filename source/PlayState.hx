@@ -55,6 +55,7 @@ import lime.utils.Assets;
 import openfl.display.BlendMode;
 import openfl.display.StageQuality;
 import openfl.filters.ShaderFilter;
+import ui.Mobilecontrols;
 
 #if windows
 import Discord.DiscordClient;
@@ -264,6 +265,10 @@ class PlayState extends MusicBeatState
 	var coin6:FlxSprite;
 	var coin7:FlxSprite;
 	var coin8:FlxSprite;
+
+	#if mobileC
+	var mcontrols:Mobilecontrols; 
+	#end
 
 	// API stuff
 	
@@ -1271,6 +1276,29 @@ class PlayState extends MusicBeatState
 		if (loadRep)
 			replayTxt.cameras = [camHUD];
 
+		#if mobileC
+			mcontrols = new Mobilecontrols();
+			switch (mcontrols.mode)
+			{
+				case VIRTUALPAD_RIGHT | VIRTUALPAD_LEFT | VIRTUALPAD_CUSTOM:
+					controls.setVirtualPad(mcontrols._virtualPad, FULL, NONE);
+				case HITBOX:
+					controls.setHitBox(mcontrols._hitbox);
+				default:
+			}
+			trackedinputs = controls.trackedinputs;
+			controls.trackedinputs = [];
+
+			var camcontrol = new FlxCamera();
+			FlxG.cameras.add(camcontrol);
+			camcontrol.bgColor.alpha = 0;
+			mcontrols.cameras = [camcontrol];
+
+			mcontrols.visible = false;
+
+			add(mcontrols);
+		#end
+
 		// if (SONG.song == 'South')
 		// FlxG.camera.alpha = 0.7;
 		// UI_camera.zoom = 1;
@@ -1523,6 +1551,11 @@ class PlayState extends MusicBeatState
 
 	function startCountdown():Void
 	{
+
+		#if mobileC
+		mcontrols.visible = true;
+		#end
+
 		inCutscene = false;
 
 		generateStaticArrows(0);
@@ -1695,7 +1728,6 @@ class PlayState extends MusicBeatState
 
 					if (SONG.validScore)
 					{
-						NGio.unlockMedal(60961);
 						Highscore.saveWeekScore(storyWeek, campaignScore, storyDifficulty);
 					}
 
@@ -2520,7 +2552,7 @@ class PlayState extends MusicBeatState
 		if (!FlxG.save.data.accuracyDisplay)
 			scoreTxt.text = "Score: " + songScore;
 
-		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
+		if (FlxG.keys.justPressed.ENTER  #if android || FlxG.android.justReleased.BACK #end && startedCountdown && canPause)
 		{
 			persistentUpdate = false;
 			persistentDraw = true;
@@ -3274,11 +3306,16 @@ class PlayState extends MusicBeatState
 
 	function endSong():Void
 	{
+
+		#if mobileC
+		mcontrols.visible = false;
+		#end
+
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
 		
 		if (!loadRep)
-			rep.SaveReplay(saveNotes);
+			trace('no');
 		else
 		{
 			FlxG.save.data.botplay = false;
@@ -3367,7 +3404,6 @@ class PlayState extends MusicBeatState
 
 					if (SONG.validScore)
 					{
-						NGio.unlockMedal(60961);
 						Highscore.saveWeekScore(storyWeek, campaignScore, storyDifficulty);
 					}
 

@@ -10,6 +10,8 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import lime.app.Application;
 import flixel.input.keyboard.FlxKey;
+import flixel.addons.ui.FlxUIInputText;
+import flixel.addons.ui.FlxInputText;
 
 #if windows
 import Discord.DiscordClient;
@@ -41,6 +43,17 @@ class ShopState extends MusicBeatState
 
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
+
+
+		for (touch in FlxG.touches.list)
+			{
+				FlxG.stage.window.textInputEnabled = true;
+			}
+
+		#if mobileC
+		addVirtualPad(NONE, B);
+		#end
+
 	}
 
 	function checkpress():Void

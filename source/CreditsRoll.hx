@@ -63,6 +63,11 @@ class CreditsRoll extends MusicBeatState
 		add(entertxt);
 
 		begincredits();
+
+		#if mobileC
+		addVirtualPad(NONE, A);
+		#end
+
 	}
 
 	var lolspin = false;

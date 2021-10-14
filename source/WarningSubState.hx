@@ -34,12 +34,17 @@ class WarningSubState extends MusicBeatState
 		txt.borderStyle = FlxTextBorderStyle.OUTLINE;
 		txt.screenCenter(X);
 		txt.y += 100;
-		add(txt);		
+		add(txt);
+		
+		#if mobileC
+		addVirtualPad(NONE, A);
+		#end
+
 	}
 
 	override function update(elapsed:Float)
 	{
-		if (FlxG.keys.justPressed.ANY)
+		if (controls.ACCEPT)
 		{
 			leftState = true;
 			FlxG.switchState(new MainMenuState());
