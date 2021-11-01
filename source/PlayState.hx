@@ -56,6 +56,7 @@ import openfl.display.BlendMode;
 import openfl.display.StageQuality;
 import openfl.filters.ShaderFilter;
 import ui.Mobilecontrols;
+import ui.FlxVirtualPad;
 
 #if windows
 import Discord.DiscordClient;
@@ -98,6 +99,8 @@ class PlayState extends MusicBeatState
 	var isanendingcutscene = false;
 
 	var tween:FlxTween;
+
+	var _pad:FlxVirtualPad;
 
 	var cranes:FlxSprite;
 	var yapeboppers:FlxSprite;
@@ -1299,6 +1302,10 @@ class PlayState extends MusicBeatState
 			add(mcontrols);
 		#end
 
+		_pad = new FlxVirtualPad(NONE, A);
+    	_pad.alpha = 0.75;
+    	this.add(_pad);
+
 		// if (SONG.song == 'South')
 		// FlxG.camera.alpha = 0.7;
 		// UI_camera.zoom = 1;
@@ -1555,6 +1562,8 @@ class PlayState extends MusicBeatState
 		#if mobileC
 		mcontrols.visible = true;
 		#end
+
+		_pad.visible = true;
 
 		inCutscene = false;
 
@@ -2513,7 +2522,7 @@ class PlayState extends MusicBeatState
 					MountainWall.x = -13381;
 				}
 
-				if (FlxG.keys.justPressed.SPACE && spaceriver == true)
+				if (FlxG.keys.justPressed.SPACE || _pad.buttonA.justPressed && spaceriver == true)
 				{
 					spaceriver = false;
 					if (uppath == true)
